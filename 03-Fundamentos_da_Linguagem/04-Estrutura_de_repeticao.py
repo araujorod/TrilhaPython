@@ -117,3 +117,8 @@
 
 # print("\nTreino finalizado!")
 # print("O time alcançou a meta de 3 gols.")
+
+
+# nome = input("Digite o seu nome:")
+
+# print(len(nome))
