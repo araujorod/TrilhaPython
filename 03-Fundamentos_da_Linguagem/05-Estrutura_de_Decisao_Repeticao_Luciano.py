@@ -27,3 +27,5 @@ nome = True
 while nome == True:
     print("Condição atendida")
     time.sleep(10)
+
+print("Fim")
