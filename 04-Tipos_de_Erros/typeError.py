@@ -25,10 +25,10 @@
 
 # # Type Hint - Dica de tipo: Colocar o tipo de valor que é esperado pela variável. Apenas uma dica, não existe nenhum tipo de trava.True
 
-time: str = "Brasil"
-adversario: str = "Argentina"
-gols: int = 3.5
-classificado: bool = False
+# time: str = "Brasil"
+# adversario: str = "Argentina"
+# gols: int = 3.5
+# classificado: bool = False
 
 # print(f"{time} fez {gols} gols contra {adversario}.")
 
@@ -42,11 +42,11 @@ classificado: bool = False
 # else:
 #     print("O time não está classificado")
 
-try:
-    print(gols / gols)
-except:
-    print("Alguma coisa deu errado")
-else:
-    print("Calculo realizado")
-finally:
-    print("Programação Python")
+# try:
+#     print(gols / gols)
+# except:
+#     print("Alguma coisa deu errado")
+# else:
+#     print("Calculo realizado")
+# finally:
+#     print("Programação Python")
