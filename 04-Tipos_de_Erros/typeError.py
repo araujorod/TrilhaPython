@@ -30,14 +30,23 @@ adversario: str = "Argentina"
 gols: int = 3.5
 classificado: bool = False
 
-print(f"{time} fez {gols} gols contra {adversario}.")
+# print(f"{time} fez {gols} gols contra {adversario}.")
 
-if isinstance(gols, int):
-    print("A variavel gols pode ser usada em cálculos.")
-else:
-    print("A variavel gols não pode ser usada em cálculos.")
+# if isinstance(gols, int):
+#     print("A variavel gols pode ser usada em cálculos.")
+# else:
+#     print("A variavel gols não pode ser usada em cálculos.")
 
-if classificado:
-    print("O time está classificado")
+# if classificado:
+#     print("O time está classificado")
+# else:
+#     print("O time não está classificado")
+
+try:
+    print(gols / gols)
+except:
+    print("Alguma coisa deu errado")
 else:
-    print("O time não está classificado")
+    print("Calculo realizado")
+finally:
+    print("Programação Python")
