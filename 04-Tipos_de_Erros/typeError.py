@@ -52,11 +52,25 @@
 #     print("Programação Python")
 
 
-numero = int(input("Insira um núemro:"))
+# numero = int(input("Insira um núemro:"))
 
-print(type(numero))
+# print(type(numero))
 
-if isinstance(numero, int):
-    print("A variável é uma inteiro!")
+# if isinstance(numero, int):
+#     print("A variável é uma inteiro!")
+# else:
+#     print("A variável não é um inteiro!")
+
+usuario = input("Digite seu nome:")
+
+if usuario.isdigit():
+    print("Você digitou seu nome errado.")
+    exit()
+elif len(usuario) == 0:
+    print("Você não digitou nada.")
+    exit()
+elif usuario.isspace():
+    print("Voce digitou so espaçoes.")
+    exit()
 else:
-    print("A variável não é um inteiro!")
+    print("Seu nome foi registrado.")
