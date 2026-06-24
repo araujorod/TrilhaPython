@@ -61,7 +61,7 @@
 # else:
 #     print("A variável não é um inteiro!")
 
-usuario = input("Digite seu nome:")
+usuario: str = input("Digite seu nome:")
 
 if usuario.isdigit():
     print("Você digitou seu nome errado.")
