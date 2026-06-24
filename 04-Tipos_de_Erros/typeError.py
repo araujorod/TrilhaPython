@@ -50,3 +50,13 @@
 #     print("Calculo realizado")
 # finally:
 #     print("Programação Python")
+
+
+numero = int(input("Insira um núemro:"))
+
+print(type(numero))
+
+if isinstance(numero, int):
+    print("A variável é uma inteiro!")
+else:
+    print("A variável não é um inteiro!")
