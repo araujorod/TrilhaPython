@@ -1,4 +1,4 @@
-gols: int = 0
+total_gols: int = 0
 
 for jogo in range(1, 4):
     gols: int = int(input(f"Quantos gols o Brasil fez nesse {jogo}?:"))
@@ -12,8 +12,10 @@ for jogo in range(1, 4):
     else:
         print("O Brasil marcou {gols} nesse jogo\n")
 
-print(f"Total de gols do Brasil: {total_gols}")
+    # print(total_gols)
+
+print(f"Total de gols do Brasil: {total_gols}\n")
 
 media: float = total_gols / 3
 
-print(f"Media de gols por jogo {media:2f}")
+print(f"Media de gols por jogo {media:.2f}\n")
