@@ -1,3 +1,5 @@
+# CONVERTENDO TIPOS NO PYTHON
+
 total_gols: int = 0
 
 for jogo in range(1, 4):
@@ -19,3 +21,5 @@ print(f"Total de gols do Brasil: {total_gols}\n")
 media: float = total_gols / 3
 
 print(f"Media de gols por jogo {media:.2f}\n")
+
+print(f"Media de gols por jogo {round(media, 2)}\n")
