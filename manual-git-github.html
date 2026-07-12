@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Prático de Git e GitHub</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #f78166;
+    --green: #3fb950;
+    --blue: #58a6ff;
+    --yellow: #d29922;
+    --purple: #bc8cff;
+    --orange: #e3b341;
+    --red: #f85149;
+    --pink: #ff7b72;
+    --mono: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 48px 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: #238636;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #58a6ff, #bc8cff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTION ─────────────────────────────────────── */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    background: var(--blue);
+    color: #000;
+    font-weight: 800;
+    font-size: 12px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-header .subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* ── CALLOUT BOX ─────────────────────────────────── */
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 0.93rem;
+  }
+  .callout.green  { border-left-color: var(--green); }
+  .callout.yellow { border-left-color: var(--yellow); }
+  .callout.red    { border-left-color: var(--red); }
+  .callout.purple { border-left-color: var(--purple); }
+  .callout strong { color: var(--blue); }
+  .callout.green strong  { color: var(--green); }
+  .callout.yellow strong { color: var(--yellow); }
+  .callout.red strong    { color: var(--red); }
+  .callout.purple strong { color: var(--purple); }
+
+  /* ── FLOW DIAGRAM ─────────────────────────────────── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+  .flow-box {
+    flex: 1;
+    min-width: 140px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .flow-box .icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .flow-box .label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .flow-box .name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .flow-box .desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .flow-box.wd  { border-color: var(--orange); }
+  .flow-box.sa  { border-color: var(--yellow); }
+  .flow-box.lr  { border-color: var(--green); }
+  .flow-box.gh  { border-color: var(--blue); }
+  .flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-align: center;
+    min-width: 70px;
+  }
+  .flow-arrow .cmd {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green);
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+  }
+  .flow-arrow .arr { font-size: 1.2rem; color: var(--muted); }
+
+  /* ── COMMAND CARDS ─────────────────────────────────── */
+  .cmd-group {
+    margin-bottom: 28px;
+  }
+  .cmd-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--purple);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cmd-group-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .cmd-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 16px;
+  }
+  .cmd-card:hover {
+    border-color: var(--blue);
+    background: #1a2130;
+  }
+  .cmd-name {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--green);
+    font-weight: 600;
+    grid-row: 1;
+    padding-top: 1px;
+  }
+  .cmd-desc {
+    font-size: 0.88rem;
+    color: var(--text);
+    grid-row: 1;
+  }
+  .cmd-example {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .cmd-example .prompt { color: var(--muted); user-select: none; }
+  .cmd-example .git-cmd { color: var(--blue); }
+  .cmd-example .git-sub { color: var(--green); }
+  .cmd-example .flag    { color: var(--yellow); }
+  .cmd-example .str     { color: var(--orange); }
+  .cmd-example .comment { color: var(--muted); }
+
+  /* ── WORKFLOW STEPS ─────────────────────────────────── */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--blue);
+    color: var(--blue);
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .step-body {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .step-title {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+  }
+  .step-body p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .step-connector {
+    width: 2px;
+    background: var(--border);
+    margin: 0 15px;
+    height: 16px;
+  }
+
+  /* ── CRISIS CARDS ─────────────────────────────────── */
+  .crisis-card {
+    background: var(--surface);
+    border: 1px solid var(--red);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .crisis-title {
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 4px;
+    font-size: 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .crisis-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .crisis-steps { list-style: none; }
+  .crisis-steps li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .crisis-steps li:last-child { border-bottom: none; }
+  .crisis-steps li .num {
+    background: var(--red);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── CONFLICT BLOCK ─────────────────────────────────── */
+  .conflict-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    margin: 12px 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .c-head    { color: var(--red);    font-weight: 700; }
+  .c-yours   { color: var(--green); }
+  .c-sep     { color: var(--yellow); font-weight: 700; }
+  .c-theirs  { color: var(--blue); }
+  .c-end     { color: var(--red);   font-weight: 700; }
+  .c-comment { color: var(--muted); }
+
+  /* ── CHEAT SHEET ─────────────────────────────────── */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
+  .cheat-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cheat-cmd {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--green);
+    font-weight: 600;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .cheat-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* ── INLINE CODE ─────────────────────────────────── */
+  code {
+    font-family: var(--mono);
+    background: var(--surface2);
+    color: var(--pink);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    margin-top: 56px;
+  }
+
+  /* ── HIGHLIGHT ─────────────────────────────────── */
+  .hl-blue   { color: var(--blue); }
+  .hl-green  { color: var(--green); }
+  .hl-yellow { color: var(--yellow); }
+  .hl-orange { color: var(--orange); }
+
+  /* ── TOC ─────────────────────────────────── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+  .toc h3 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .toc ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .toc ol li a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc ol li a:hover { text-decoration: underline; }
+  .toc ol li a span { color: var(--muted); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="badge">Princípio de Pareto · 20% → 80%</div>
+  <h1>Manual Prático de Git &amp; GitHub</h1>
+  <p>Os comandos e conceitos que resolvem a esmagadora maioria do trabalho diário — sem enrolação.</p>
+</div>
+
+<!-- ── TOC ── -->
+<div class="toc">
+  <h3>📋 Índice</h3>
+  <ol>
+    <li><a href="#s1"><span>1.</span> O Modelo Mental Mínimo Viável</a></li>
+    <li><a href="#s2"><span>2.</span> Os 20% dos Comandos Essenciais</a></li>
+    <li><a href="#s3"><span>3.</span> Fluxo de Trabalho de uma Empresa Real</a></li>
+    <li><a href="#s4"><span>4.</span> Socorro, Deu Ruim! — Gestão de Crise</a></li>
+    <li><a href="#s5"><span>5.</span> Cheat Sheet — Folha de Cola</a></li>
+  </ol>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SEÇÃO 1 — MODELO MENTAL
+══════════════════════════════════════════════════════ -->
+<div id="s1" class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>O Modelo Mental Mínimo Viável</h2>
+    <div class="subtitle">Conceitos · 2 min de leitura</div>
+  </div>
+
+  <div class="callout">
+    <strong>Git vs. GitHub — a diferença em uma linha:</strong><br>
+    <strong>Git</strong> é a ferramenta instalada no seu computador que rastreia mudanças no código.
+    <strong>GitHub</strong> é um site na nuvem onde você armazena e compartilha esse histórico com seu time.
+    Git sem GitHub funciona; GitHub sem Git não.
+  </div>
+
+  <p style="margin-bottom:16px; color: var(--muted); font-size:0.9rem;">
+    Todo arquivo no Git vive em um dos <strong style="color:var(--text)">4 lugares</strong> abaixo. Entender esse fluxo resolve 90% das dúvidas do dia a dia:
+  </p>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow">
+    <div class="flow-box wd">
+      <div class="icon">✏️</div>
+      <div class="label">Lugar 1</div>
+      <div class="name">Working Directory</div>
+      <div class="desc">Seus arquivos no disco. Você edita aqui.</div>
+    </div>
+
+    <div class="flow-arrow">
+      <div class="cmd">git add</div>
+      <div class="arr">→</div>
+    </div>
+
+    <div class="flow-box sa">
+      <div class="icon">🎯</div>
+      <div class="label">Lugar 2</div>
+      <div class="name">Staging Area</div>
+      <div class="desc">Rascunho do próximo commit. Você escolhe o que entra.</div>
+    </div>
+
+    <div class="flow-arrow">
+      <div class="cmd">git commit</div>
+      <div class="arr">→</div>
+    </div>
+
+    <div class="flow-box lr">
+      <div class="icon">📦</div>
+      <div class="label">Lugar 3</div>
+      <div class="name">Local Repository</div>
+      <div class="desc">Histórico salvo no seu PC. Ainda só seu.</div>
+    </div>
+
+    <div class="flow-arrow">
+      <div class="cmd">git push</div>
+      <div class="arr">→</div>
+    </div>
+
+    <div class="flow-box gh">
+      <div class="icon">☁️</div>
+      <div class="label">Lugar 4</div>
+      <div class="name">GitHub (Remote)</div>
+      <div class="desc">Histórico na nuvem. Visível para o time.</div>
+    </div>
+  </div>
+
+  <div class="callout yellow">
+    <strong>Fluxo reverso:</strong> Use <code>git pull</code> para trazer atualizações do GitHub para o seu Working Directory em um único comando (equivale a <code>git fetch</code> + <code>git merge</code>).
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SEÇÃO 2 — COMANDOS ESSENCIAIS
+══════════════════════════════════════════════════════ -->
+<div id="s2" class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Os 20% dos Comandos Essenciais</h2>
+    <div class="subtitle">O Guia de Sobrevivência</div>
+  </div>
+
+  <!-- GRUPO 1: CONFIGURAÇÃO -->
+  <div class="cmd-group">
+    <div class="cmd-group-title">⚙️ Configuração Inicial — rode uma vez na vida</div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git config</div>
+      <div class="cmd-desc">Define seu nome e e-mail — essa identidade aparece em todos os commits.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">config</span> <span class="flag">--global</span> user.name <span class="str">"Seu Nome"</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">config</span> <span class="flag">--global</span> user.email <span class="str">"seu@email.com"</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">config</span> <span class="flag">--list</span>   <span class="comment"># confirma o que foi salvo</span></div>
+    </div>
+  </div>
+
+  <!-- GRUPO 2: INÍCIO -->
+  <div class="cmd-group">
+    <div class="cmd-group-title">🚀 Início e Clonagem — só no começo do projeto</div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git init</div>
+      <div class="cmd-desc">Cria um repositório Git do zero na pasta atual.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">init</span>
+<span class="comment"># Initialized empty Git repository in ./meu-projeto/.git/</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git clone</div>
+      <div class="cmd-desc">Baixa um repositório completo do GitHub (histórico incluído) para o seu PC.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">clone</span> https://github.com/usuario/repositorio.git
+<span class="prompt">$ </span>cd repositorio   <span class="comment"># entra na pasta criada</span></div>
+    </div>
+  </div>
+
+  <!-- GRUPO 3: CICLO DIÁRIO -->
+  <div class="cmd-group">
+    <div class="cmd-group-title">🔄 Ciclo de Salvamento Diário — você vai rodar isso todo dia</div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git status</div>
+      <div class="cmd-desc">Mostra o estado atual — quais arquivos mudaram, quais estão na staging.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">status</span>
+<span class="comment"># On branch main
+# Changes not staged for commit:
+#   modified:   src/app.js</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git add</div>
+      <div class="cmd-desc">Move arquivos do Working Directory para a Staging Area (prepara para o commit).</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">add</span> src/app.js      <span class="comment"># adiciona um arquivo específico</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">add</span> <span class="flag">.</span>             <span class="comment"># adiciona TUDO que mudou (use com cuidado)</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git commit</div>
+      <div class="cmd-desc">Cria um snapshot permanente dos arquivos em staging, com uma mensagem descritiva.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">-m</span> <span class="str">"feat: adiciona validação de CPF no formulário"</span>
+<span class="comment"># [main a3f2c1d] feat: adiciona validação de CPF no formulário</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git push</div>
+      <div class="cmd-desc">Envia seus commits locais para o GitHub, tornando-os visíveis para o time.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">push</span> origin main          <span class="comment"># envia branch "main" para o remote "origin"</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">push</span> origin feature/login  <span class="comment"># envia outra branch</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git pull</div>
+      <div class="cmd-desc">Baixa e integra as atualizações do GitHub na sua branch atual — rode sempre antes de começar o dia.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">pull</span> origin main
+<span class="comment"># Already up to date.  ← ou lista os arquivos atualizados</span></div>
+    </div>
+  </div>
+
+  <!-- GRUPO 4: BRANCHES -->
+  <div class="cmd-group">
+    <div class="cmd-group-title">🌿 Ramificação e União — trabalhar em paralelo sem conflitos</div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git branch</div>
+      <div class="cmd-desc">Lista todas as branches locais — a com <code>*</code> é a que você está agora.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">branch</span>
+<span class="comment"># * main
+#   feature/login
+#   bugfix/header</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git switch</div>
+      <div class="cmd-desc">Muda para outra branch ou cria uma nova (<code>-c</code>) — substituto moderno do <code>checkout</code>.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> main                <span class="comment"># muda para branch existente</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> <span class="flag">-c</span> feature/login   <span class="comment"># cria E já muda para a nova branch</span></div>
+    </div>
+
+    <div class="cmd-card">
+      <div class="cmd-name">git merge</div>
+      <div class="cmd-desc">Integra os commits de outra branch na branch em que você está atualmente.</div>
+      <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> main
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">merge</span> feature/login   <span class="comment"># traz feature/login → main</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SEÇÃO 3 — GIT FLOW
+══════════════════════════════════════════════════════ -->
+<div id="s3" class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Fluxo de Trabalho de uma Empresa Real</h2>
+    <div class="subtitle">Git Flow Simplificado</div>
+  </div>
+
+  <div class="callout green">
+    <strong>A regra de ouro:</strong> Nunca commite direto na <code>main</code>. Todo trabalho novo vive em uma branch própria e entra via Pull Request.
+  </div>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">🌅 Comece o dia sincronizado</div>
+        <p>Garanta que sua <code>main</code> local está idêntica ao GitHub antes de qualquer coisa.</p>
+        <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> main
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">pull</span> origin main</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">🌿 Crie uma branch para a tarefa</div>
+        <p>Use um nome descritivo — geralmente o ID da tarefa + descrição curta.</p>
+        <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> <span class="flag">-c</span> feature/AUTH-42-login-google</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">💻 Desenvolva e faça commits frequentes</div>
+        <p>Commits pequenos e descritivos são mais fáceis de revisar e de reverter se necessário.</p>
+        <div class="cmd-example"><span class="comment"># ... você edita arquivos ...</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">add</span> <span class="flag">.</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">-m</span> <span class="str">"feat(auth): integra SDK do Google OAuth"</span>
+<span class="comment"># ... mais código ...</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">-m</span> <span class="str">"test(auth): adiciona testes de login Google"</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">☁️ Suba a branch para o GitHub</div>
+        <p>O <code>-u</code> conecta sua branch local à remota — após isso, basta usar <code>git push</code>.</p>
+        <div class="cmd-example"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">push</span> <span class="flag">-u</span> origin feature/AUTH-42-login-google</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">🔍 Abra um Pull Request (PR) no GitHub</div>
+        <p>Após o push, o GitHub exibe um botão <strong style="color:var(--green)">Compare &amp; pull request</strong>. Clique, escreva uma descrição clara do que foi feito e solicite review de um colega. O PR é onde o time discute o código.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">💬 Responda o review e ajuste</div>
+        <p>Se o reviewer pedir mudanças, edite o código, faça um novo commit e dê push na mesma branch — o PR se atualiza automaticamente.</p>
+        <div class="cmd-example"><span class="comment"># ... ajusta o código conforme feedback ...</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">add</span> <span class="flag">.</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">-m</span> <span class="str">"fix(auth): corrige escopo de permissões do Google"</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">push</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <div class="step-title">✅ Merge aprovado — integre à main</div>
+        <p>Com aprovação, clique <strong style="color:var(--blue)">Merge pull request</strong> no GitHub. Sua branch entra na <code>main</code>. Opcionalmente delete a branch de feature — o histórico permanece.</p>
+        <div class="cmd-example"><span class="comment"># Após merge via GitHub, atualize seu local:</span>
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">switch</span> main
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">pull</span> origin main</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SEÇÃO 4 — GESTÃO DE CRISE
+══════════════════════════════════════════════════════ -->
+<div id="s4" class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Socorro, Deu Ruim!</h2>
+    <div class="subtitle">Gestão de Crise</div>
+  </div>
+
+  <!-- CRISE 1: DESFAZER COMMIT -->
+  <div class="crisis-card">
+    <div class="crisis-title">💣 Situação 1: Comitei algo errado (ainda não fiz push)</div>
+    <div class="crisis-sub">O commit existe apenas no seu PC — você tem total liberdade para desfazê-lo sem afetar ninguém.</div>
+
+    <ul class="crisis-steps">
+      <li>
+        <div class="num">1</div>
+        <div>
+          <strong>Desfaz o commit mas mantém as alterações no código:</strong>
+          o flag <code>--soft</code> volta os arquivos para a staging (prontos para um novo commit).
+          <div class="cmd-example" style="margin-top:8px"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">reset</span> <span class="flag">--soft</span> HEAD~1</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div>
+          <strong>Alternativa — descarta TUDO do commit (cuidado!):</strong>
+          <code>--hard</code> apaga o commit E as alterações no código permanentemente.
+          <div class="cmd-example" style="margin-top:8px"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">reset</span> <span class="flag">--hard</span> HEAD~1   <span class="comment"># ⚠️ irreversível</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div>
+          <strong>Só quer corrigir a mensagem do commit?</strong> Use <code>--amend</code> — reescreve apenas o último commit.
+          <div class="cmd-example" style="margin-top:8px"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">--amend</span> <span class="flag">-m</span> <span class="str">"mensagem corrigida"</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CRISE 2: CONFLITO DE MERGE -->
+  <div class="crisis-card">
+    <div class="crisis-title">⚔️ Situação 2: Conflito de Merge — o Git não sabe qual código usar</div>
+    <div class="crisis-sub">Ocorre quando você e um colega editaram a mesma linha do mesmo arquivo. Parece assustador, mas o processo é simples.</div>
+
+    <ul class="crisis-steps">
+      <li>
+        <div class="num">1</div>
+        <div>
+          <strong>Git anuncia o conflito:</strong> rode <code>git status</code> para ver quais arquivos estão em conflito (marcados como <em>both modified</em>).
+          <div class="cmd-example" style="margin-top:8px"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">merge</span> feature/login
+<span class="comment"># CONFLICT (content): Merge conflict in src/auth.js
+# Automatic merge failed; fix conflicts and then commit the result.</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div>
+          <strong>Abra o arquivo conflitante.</strong> O Git inseriu marcadores visuais mostrando os dois lados:
+          <div class="conflict-block"><span class="c-head">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>                    <span class="c-comment">← seu código (branch atual)</span>
+<span class="c-yours">const titulo = "Meu Projeto";</span>
+<span class="c-sep">=======</span>                           <span class="c-comment">← separador</span>
+<span class="c-theirs">const titulo = "Nosso Projeto";</span>   <span class="c-comment">← código do colega</span>
+<span class="c-end">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/login</span>            <span class="c-comment">← branch de origem</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div>
+          <strong>Edite manualmente</strong> deixando apenas o código final correto. Apague os marcadores (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) — eles não devem ir para o commit.
+          <div class="conflict-block"><span class="c-yours">const titulo = "Nosso Projeto";  </span><span class="c-comment">← resultado final (você decidiu)</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div>
+          <strong>Marque como resolvido e finalize:</strong>
+          <div class="cmd-example" style="margin-top:8px"><span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">add</span> src/auth.js
+<span class="prompt">$ </span><span class="git-cmd">git</span> <span class="git-sub">commit</span> <span class="flag">-m</span> <span class="str">"merge: resolve conflito em auth.js"</span></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="callout purple">
+    <strong>Dica profissional:</strong> VS Code e outros editores modernos exibem botões visuais — <em>Accept Current Change</em>, <em>Accept Incoming Change</em>, <em>Accept Both</em> — diretamente sobre os conflitos. Use-os para resolver conflitos mais rápido sem precisar editar o texto manualmente.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SEÇÃO 5 — CHEAT SHEET
+══════════════════════════════════════════════════════ -->
+<div id="s5" class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Cheat Sheet</h2>
+    <div class="subtitle">Folha de Cola · Consulta rápida</div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-row"><div class="cheat-cmd">git config --global</div><div class="cheat-desc">Configura usuário global</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git init</div><div class="cheat-desc">Inicia repositório local</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git clone &lt;url&gt;</div><div class="cheat-desc">Clona repo remoto</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git status</div><div class="cheat-desc">Vê arquivos alterados</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git add .</div><div class="cheat-desc">Prepara tudo staging</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git add &lt;file&gt;</div><div class="cheat-desc">Prepara arquivo específico</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git commit -m ""</div><div class="cheat-desc">Salva snapshot local</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git push origin &lt;br&gt;</div><div class="cheat-desc">Envia para GitHub</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git pull origin &lt;br&gt;</div><div class="cheat-desc">Baixa do GitHub</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git branch</div><div class="cheat-desc">Lista branches locais</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git switch -c &lt;nome&gt;</div><div class="cheat-desc">Cria e muda branch</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git switch &lt;nome&gt;</div><div class="cheat-desc">Muda de branch</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git merge &lt;branch&gt;</div><div class="cheat-desc">Une branch atual</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git reset --soft HEAD~1</div><div class="cheat-desc">Desfaz último commit</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git commit --amend</div><div class="cheat-desc">Corrige último commit</div></div>
+    <div class="cheat-row"><div class="cheat-cmd">git log --oneline</div><div class="cheat-desc">Histórico resumido commits</div></div>
+  </div>
+</div>
+
+
+<div class="footer">
+  Manual Prático de Git &amp; GitHub · Princípio de Pareto · Gerado por Claude em junho de 2026
+</div>
+
+</body>
+</html>
