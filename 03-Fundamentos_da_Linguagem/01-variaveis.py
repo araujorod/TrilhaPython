@@ -92,7 +92,7 @@ Ainda assim, ela é interpretada como uma string.
 # "Built-in" em Python refere-se a funções, tipos de dados e exceções que já vêm integrados no núcleo da linguagem
 
 """
-FECHAMENTO DO BLOCO
+-FECHAMENTO DO BLOCO-
 
 Então, resumindo o que a gente viu até aqui:
  - Uma variável é um identificador (ou rótulo) que referencia um objeto armazenado na memória, o qual contém o valor que queremos utilizar no programa.
