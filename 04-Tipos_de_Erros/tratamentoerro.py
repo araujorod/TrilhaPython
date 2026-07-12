@@ -29,3 +29,5 @@ print(f"O Brasil fez {total_gols} gols.")
 media: float = total_gols / 3
 
 print(f"Média de gols por jogo: {media:.2f}")
+
+# Aulas
